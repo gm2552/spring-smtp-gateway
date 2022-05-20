@@ -1,0 +1,93 @@
+accelerator:
+  displayName: Spring SMTP Gateway
+  description: An lightweight SMTP server and a sample Spring Cloud Streams sink to demonstrate TAP tcp and queue workload types. 
+  iconUrl: https://github.com/gm2552/spring-smtp-gateway/raw/main/icons/email.png
+  tags:
+  - java
+  - spring
+
+  options:
+  - label: SMTP Gateway Container Port
+    description: The TCP port that will be exposed by the container.  This should match the configured listening port of the SMTP server application.
+    defaultValue: 1026
+    name: containerPort
+    inputType: text
+    dataType: number
+    required: true
+  - label: Create Kubernetes Service Resource Definition
+    description: If set to true, a Kubernetes Service resource definition yaml file will be created.
+    defaultValue: false
+    name: createServiceResource
+    inputType: checkbox
+    dataType: boolean
+    required: true
+  - label: SMTP Gateway Service Port
+    description: The TCP port that will be used by Kubernetes service resource.
+    defaultValue: 25
+    name: servicePort
+    inputType: text
+    dataType: number
+    required: true
+    dependsOn:
+      name: createServiceResource
+  - label: Service Resource Type
+    description: Type of the Kubernetes service resource that will created.
+    defaultValue: clusterIP
+    name: serviceResourceType
+    inputType: select
+    choices:
+    - value: clusterIP
+      text: Cluster IP
+    - value: loadBalancer
+      text: Load Balancer
+    - value: nodePort
+      text: Node Port
+    dataType: string
+    required: true
+    dependsOn:
+      name: createServiceResource
+  - label: RabbitMQ Cluster Name
+    description: The name of the RabbitMQ cluster that the application services will connect to.
+    defaultValue: rmq-1
+    name: rabbitMQName
+    inputType: text
+    dataType: string
+    required: true
+  - label: RabbitMQ Service Namespace
+    description:  The namespace where the RabbitMQ cluster resides (or will reside once created).
+    defaultValue: service-instances
+    name: serviceNamespace
+    inputType: text
+    dataType: string
+    required: true
+  - label: Workload Namespace
+    description:  The namespace where the application services will be deployed.  This field is needed for properly creating resource claims.
+    defaultValue: workloads
+    name: workloadNamespace
+    inputType: text
+    dataType: string
+    required: true
+  - label: Create RabbitMQ Cluster Definition
+    description: If set to true, a RabbitMQ cluster definition yaml file will be created.
+    defaultValue: true
+    name: createRabbitMQCluster
+    inputType: checkbox
+    dataType: boolean
+    required: true
+  - label: Number of RabbitMQ Cluster Nodes
+    description: The number of nodes that will make up the RabbitMQ number.  SHOULD be an odd number.
+    defaultValue: 1
+    name: numRabbitMQClusterNodes
+    inputType: text
+    dataType: number
+    required: true
+    dependsOn: 
+      name: createRabbitMQCluster
+  - label: Create Resource Claim Defintion
+    description: If set to true, a resource claim definition yaml file will be created.
+    defaultValue: true
+    name: createResourceClaim
+    inputType: checkbox
+    dataType: boolean
+    required: true
+    
