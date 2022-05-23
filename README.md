@@ -72,3 +72,73 @@ If you are using the Tanzu Application Platform, you can use the [services toolk
 
 This repository includes an `accelerator.yaml` file that is used by the Tanzu Application Platform [Accelerator](https://docs.vmware.com/en/Tanzu-Application-Platform/1.1/tap/GUID-tap-gui-plugins-application-accelerator.html) feature.  Using this repository as the backing for an accelerator, you can generate project and configuration files to facilitate connecting to necessary data services (eg. RabbitMQ) and building/deploying the application services.
 
+### Configuration Options
+
+The accelerator contains the following configuration options:
+
+* **SMTP Gateway Container Port:**  The port that the smtp-gateway micro-service will be listening on for SMTP connections and SHOULD match the application's port configuration.  The default port is 1026 which is the same default port that the application listens on.
+* **Create Kubernetes Service Resource:**  If this box is checked, the accelerator will generate a file named `service.yaml` that contains the resource definition for the service that will route traffic to the smtp-server micro-service.*
+* **SMTP Gateway Service Port:** The port that the Kubernetes service resource will be listening on.
+* **Service Resource Type:** The type of the Kubernetes service resource.  *NOTE:* If this is set to `LoadBalancer`, it is assumed your Kubernetes platform is appropriately configured to allocate an external IP address with a platform provided LoadBalancer implementation.
+* **RabbitMQ Cluster Name:**  The name of the RabbitMQ cluster resource that the micro-services will connect to.  If a new RabbitMQ cluster resource is to be created, this will be the name of the resource.  This name will also be propagated to the `workload.yaml` files in the resource claim section to indicate the names of the cluster that micro-services should connect to.
+* **RabbitMQ Service Name:** The namespace where the RabbitMQ is deployed or where it will be deployed.  It is assumed that this namespace has already been created.
+* **Workload Namespace:** The namespace where the application micro-services will be deployed.  It is assumed that this namespace has already been created.
+* **Create RabbitMQ Cluster:** If this box is checked, the accelerator will generate a file named `rmqCluster.yaml` that contains the resource definition for the cluster that will be created.
+* **Number of RabbitMQ Nodes:** If a cluster needs to be created, this is the number of replica nodes that will be created.
+* **Create Resource Claim:** If this box is checked, the accelerator will generate a file named `rmqResoruceClaim.yaml` that contains the resource definition for the resource claims that the micro-services can use to create service bindings to the RabbitMQ cluster.  It also creates resource definitions used by the Tanzu CLI to manage service instances and resource claims. 
+
+The generated zip file from the accelerator will contain project folders for all micro-services and yaml configuration files for the selected options.  It will also contain updated workload.yaml files that contain configuration data from the choices above.
+
+### Application Deployment
+
+Before deploying the application, you should first deploy any requested configuration items from the section above using the `kubectl` command against each yaml file.  
+
+Ex:
+
+```
+kubectl apply -f service.yaml -f rmqCluster.yaml -f rmqResoruceClaim.yaml
+```
+
+Each project folder contains a `workload.yaml` file under its `config` folder.  If you are using the `tanzu cli`, you can use these files to build and deploy the micro-services.
+
+Ex:
+
+```
+tanzu apps workloads create -f ./smtp-gateway/config/workload.yaml
+```
+
+Optionally, the accelerator creates a `workloads.yaml` in the root directory that can be used to deploy all micro-services.  This can be applied using the `kubectl` command.
+
+```
+kubectl apply -f workloads.yaml
+```
+
+## Testing the Deployment
+
+Assuming the application has successfully deployed, you can test the application by using the `telnet` application (or something else which can
+speak SMTP) as follows (you'll need to look up $LB_IP from the loadbalancer service):
+
+```bash
+cat <<EOF | telnet $LB_IP 25
+ehlo console
+mail from: ea@vmware.com
+rcpt to: gm@vmware.com
+data
+To: Evan Anderson <ea@vmware.com>
+From: Greg Meyer <gm@vmware.com>
+Subject: Application Test
+MIME-Version: 1.0
+message-id: 0c796d0e-4c76-43e8-be40-2cd5e30c1006
+Date: Mon, 23 May 2023 07:57:27 -0500
+
+Hello world!  I made it here.
+.
+quit
+EOF
+```
+
+You can then check that the smtp-sink application received the message with the following command:
+
+```
+kubectl logs -l app.kubernetes.io/component=run,carto.run/workload-name=smtp-sink --tail 20
+```
