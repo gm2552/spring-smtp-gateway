@@ -9,24 +9,24 @@ accelerator:
   options:
   - label: SMTP Gateway Container Port
     description: The TCP port that will be exposed by the container.  This should match the configured listening port of the SMTP server application.
-    defaultValue: 1026
+    defaultValue: "1026"
     name: containerPort
     inputType: text
-    dataType: number
+    dataType: string
     required: true
   - label: Create Kubernetes Service Resource Definition
     description: If set to true, a Kubernetes Service resource definition yaml file will be created.
-    defaultValue: false
+    defaultValue: true
     name: createServiceResource
     inputType: checkbox
     dataType: boolean
     required: true
   - label: SMTP Gateway Service Port
     description: The TCP port that will be used by Kubernetes service resource.
-    defaultValue: 25
+    defaultValue: "25"
     name: servicePort
     inputType: text
-    dataType: number
+    dataType: string
     required: true
     dependsOn:
       name: createServiceResource
@@ -68,7 +68,7 @@ accelerator:
     dataType: string
     required: true
   - label: Create RabbitMQ Cluster Definition
-    description: If set to true, a RabbitMQ cluster definition yaml file will be created.
+    description: "If set to true, a RabbitMQ cluster definition yaml file will be created."
     defaultValue: true
     name: createRabbitMQCluster
     inputType: checkbox
@@ -76,18 +76,83 @@ accelerator:
     required: true
   - label: Number of RabbitMQ Cluster Nodes
     description: The number of nodes that will make up the RabbitMQ number.  SHOULD be an odd number.
-    defaultValue: 1
+    defaultValue: "1"
     name: numRabbitMQClusterNodes
     inputType: text
-    dataType: number
+    dataType: string
     required: true
     dependsOn: 
       name: createRabbitMQCluster
   - label: Create Resource Claim Defintion
-    description: If set to true, a resource claim definition yaml file will be created.
+    description: "If set to true, a resource claim definition yaml file will be created."
     defaultValue: true
     name: createResourceClaim
     inputType: checkbox
     dataType: boolean
     required: true
-    
+engine:
+  merge:
+  - include: 
+      ["**/.java", "**/.yaml",  "**/.xml", "**/*.properties", "**/*.yml", "**/.jar"]
+  - exclude: 
+      ["**/templates/**"]
+  - include: ["**/config/workload.yaml", "**/templates/workloads.template"]
+    chain:
+    - type: ReplaceText
+      substitutions:
+        - text: "rmq-1"
+          with: "#rabbitMQName"
+        - text: "workloads"
+          with: "#workloadNamespace"  
+        - text: "1026"
+          with: "#containerPort"     
+    - type: RewritePath
+      regex: 'templates/workloads.template'
+      rewriteTo: "'workloads.yaml'" 
+  - condition:
+      "#createServiceResource"
+    include: ["**/service.template"]
+    chain:
+    - type: ReplaceText
+      substitutions:
+        - text: "workload_namespace"
+          with: "#workloadNamespace"  
+        - text: "container_port"
+          with: "#containerPort"      
+        - text: "service_port"
+          with: "#servicePort"   
+        - text: "service_type"
+          with: "#serviceResourceType"           
+    - type: RewritePath
+      regex: 'templates/service.template'
+      rewriteTo: "'service.yaml'"                
+  - condition:
+      "#createRabbitMQCluster"
+    include: ["**/rmqCluster.template"]
+    chain:
+    - type: ReplaceText
+      substitutions:
+        - text: "rmq_instance_name"
+          with: "#rabbitMQName"
+        - text: "rmq_service_namespace"
+          with: "#serviceNamespace"   
+        - text: "numReplicas"
+          with: "#numRabbitMQClusterNodes"            
+    - type: RewritePath
+      regex: 'templates/rmqCluster.template'
+      rewriteTo: "'rmqCluster.yaml'"
+  - condition:
+      "#createResourceClaim"
+    include: ["**/rmqResourceClaim.template"]
+    chain:
+    - type: ReplaceText
+      substitutions:
+        - text: "rmq_instance_name"
+          with: "#rabbitMQName" 
+        - text: "rmq_service_namespace"
+          with: "#serviceNamespace"
+        - text: "rmq_workloads_namespace"
+          with: "#workloadNamespace"       
+    - type: RewritePath
+      regex: 'templates/rmqResourceClaim.template'
+      rewriteTo: "'rmqResourceClaim.yaml'"

@@ -29,3 +29,46 @@ smtpmqgateway.clientwhitelist.cidr=127.0.0.1/16,192.168.0.1/16
 The applications services are pre-configured to use a RabbitMQ binding and by default attempt to connect to `localhost:5672` with a username\password of `guest\guest`.  These can be overriden using standard [Spring configuration properties](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.integration) for RabbitMQ.
 
 
+## RabbitMQ
+
+The default build configuration requires a RabbitMQ cluster to function properly.
+
+### RabbitMQ Instalation
+
+If you do not already have a RabbitMQ cluster running, you will spin one up.  Below will covers a few options.
+
+#### Kubernetes Operator
+
+The RabbitMQ Kubernetes operator provides a resource based option for deploying RabbitMQ clusters to a Kubernetes cluster.  It also has the nicety of supporting the Kubernetes [Service Binding Spec](https://github.com/servicebinding/spec).  To install the RabbitMQ operator, run the following command against your cluster. 
+
+```
+kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+```
+
+After the operator has been successfully installed, you can create a cluster by applying a RabbitMQCluster resource to you Kubernetes cluster.  The following is an example RabbitMQCluster resource that will spin up a cluster with 1 node in the default namespace.
+
+```
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rmq-1
+spec:
+  replicas: 1
+```
+
+If you are using a Tanzu Application Platform accelerator as described in a later section of this document, a RabbitMQCluster yaml file will be generated for you, and you simply need to run `kubectl apply -f	` using that generated file. 
+
+### Connectivity Configuration
+
+The application services do not care where or how the RabbitMQ cluster is installed; they just need configuration information to connect to the cluster.  As described earlier in this document, the configuration is done through Spring configuration properties, and there are many options to provided those properties.
+
+#### Kubenetes Service Binding
+
+If you are using Tanzu Application Platform or some other build system like `pack` or `kpack` to build a container, these system will automatically include the spring service binding library in the image.  The service binding library looks for mounted secrets in the container file system at runtime to obtain the necessary connectivity information.  Depending on your platform, those secrets are mounted using your platforms implementation of the service binding specification.
+
+If you are using the Tanzu Application Platform, you can use the [services toolkit](https://docs.vmware.com/en/Services-Toolkit-for-VMware-Tanzu-Application-Platform/0.6/svc-tlk/GUID-overview.html) to create resource claims and attach those claims to the application services.  If you are using a Tanzu Application Platform accelerator as described in a later section of this document, the necessary yaml configuration will be generated for you, and you simply need to run `kubectl apply -f	` using that generated file.  A workload.yaml file will also be generated that will include the necessary `resource claim` configuration to bind to the RabbitMQ instance.
+
+## Tanzu Application Platform Accelerator
+
+This repository includes an `accelerator.yaml` file that is used by the Tanzu Application Platform [Accelerator](https://docs.vmware.com/en/Tanzu-Application-Platform/1.1/tap/GUID-tap-gui-plugins-application-accelerator.html) feature.  Using this repository as the backing for an accelerator, you can generate project and configuration files to facilitate connecting to necessary data services (eg. RabbitMQ) and building/deploying the application services.
+

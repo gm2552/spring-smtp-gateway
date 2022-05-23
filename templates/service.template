@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: smtp-gateway
+  namespace: workload_namespace
+spec:
+  selector:
+    carto.run/workload-name: smtp-gateway
+    app.kubernetes.io/component: run
+  type: service_type
+  ports:
+  - port: service_port
+    targetPort: container_port
