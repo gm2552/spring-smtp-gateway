@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
- name: smpt-sink
+ name: smtp-sink
  description: A sink/desitination for SMTP Mime messages.  
  tags:
    - tanzu
@@ -16,5 +16,5 @@ spec:
  owner: default-team
  system: spring-smtp-gateway
  dependsOn:
-  - resource:service-instances/rmq-1
-  - component:workloads/smtp-gateway
+  - resource:default/rmq-1
+  - component:default/smtp-gateway

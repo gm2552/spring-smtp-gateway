@@ -18,7 +18,7 @@ spec:
       url: https://github.com/gm2552/spring-smtp-gateway
       ref:
         branch: main
-    subpath: smtp-gateway
+    subPath: smtp-gateway
   params:
   - name: ports
     value:
