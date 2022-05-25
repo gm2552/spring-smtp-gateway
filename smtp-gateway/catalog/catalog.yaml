@@ -8,7 +8,6 @@ metadata:
  links:
    - url: https://github.com/gm2552/spring-smtp-gateway/blob/main/README.md
      title: README
-     icon: https://github.com/gm2552/spring-smtp-gateway/blob/main/icons/email.png
  annotations:
    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=spring-smtp-gateway'
 spec:
