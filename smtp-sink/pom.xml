@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>smtp-sink</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>direct-smtp-sink</name>
+	<name>smtp-sink</name>
 	<description>Application to read messages for SMTP MQ channel.</description>
 	<properties>
 		<java.version>11</java.version>
