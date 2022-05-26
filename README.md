@@ -77,15 +77,15 @@ This repository includes an `accelerator.yaml` file that is used by the Tanzu Ap
 The accelerator contains the following configuration options:
 
 * **SMTP Gateway Container Port:**  The port that the smtp-gateway micro-service will be listening on for SMTP connections and SHOULD match the application's port configuration.  The default port is 1026 which is the same default port that the application listens on.
-* **Create Kubernetes Service Resource:**  If this box is checked, the accelerator will generate a file named `service.yaml` that contains the resource definition for the service that will route traffic to the smtp-server micro-service.*
+* **Create Kubernetes Service Resource:**  If this box is checked, the accelerator will generate a file named `service.yaml` in the K8s directory that contains the resource definition for the service that will route traffic to the smtp-server micro-service.*
 * **SMTP Gateway Service Port:** The port that the Kubernetes service resource will be listening on.
 * **Service Resource Type:** The type of the Kubernetes service resource.  *NOTE:* If this is set to `LoadBalancer`, it is assumed your Kubernetes platform is appropriately configured to allocate an external IP address with a platform provided LoadBalancer implementation.
 * **RabbitMQ Cluster Name:**  The name of the RabbitMQ cluster resource that the micro-services will connect to.  If a new RabbitMQ cluster resource is to be created, this will be the name of the resource.  This name will also be propagated to the `workload.yaml` files in the resource claim section to indicate the names of the cluster that micro-services should connect to.
 * **RabbitMQ Service Name:** The namespace where the RabbitMQ is deployed or where it will be deployed.  It is assumed that this namespace has already been created.
 * **Workload Namespace:** The namespace where the application micro-services will be deployed.  It is assumed that this namespace has already been created.
-* **Create RabbitMQ Cluster:** If this box is checked, the accelerator will generate a file named `rmqCluster.yaml` that contains the resource definition for the cluster that will be created.
+* **Create RabbitMQ Cluster:** If this box is checked, the accelerator will generate a file named `rmqCluster.yaml` in the K8s directory that contains the resource definition for the cluster that will be created.
 * **Number of RabbitMQ Nodes:** If a cluster needs to be created, this is the number of replica nodes that will be created.
-* **Create Resource Claim:** If this box is checked, the accelerator will generate a file named `rmqResoruceClaim.yaml` that contains the resource definition for the resource claims that the micro-services can use to create service bindings to the RabbitMQ cluster.  It also creates resource definitions used by the Tanzu CLI to manage service instances and resource claims. 
+* **Create Resource Claim:** If this box is checked, the accelerator will generate a file named `rmqResoruceClaim.yaml` in the K8s directory that contains the resource definition for the resource claims that the micro-services can use to create service bindings to the RabbitMQ cluster.  It also creates resource definitions used by the Tanzu CLI to manage service instances and resource claims. 
 
 The generated zip file from the accelerator will contain project folders for all micro-services and yaml configuration files for the selected options.  It will also contain updated workload.yaml files that contain configuration data from the choices above.
 
@@ -107,7 +107,7 @@ Ex:
 tanzu apps workloads create -f ./smtp-gateway/config/workload.yaml
 ```
 
-Optionally, the accelerator creates a `workloads.yaml` in the root directory that can be used to deploy all micro-services.  This can be applied using the `kubectl` command.
+Optionally, the accelerator creates a `workloads.yaml` in the K8s directory that can be used to deploy all micro-services.  This can be applied using the `kubectl` command.
 
 ```
 kubectl apply -f workloads.yaml

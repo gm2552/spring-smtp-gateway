@@ -50,7 +50,7 @@ public class SMTPMessageHandler_maxSizeTest
         
         
         final SMTPClient client = new SMTPClient();
-        client.connect("localhost", 1025);
+        client.connect("localhost", 1026);
         client.helo("localhost");
         client.setSender(sender);
         client.addRecipient("rcpt@localhost.com");
@@ -78,7 +78,7 @@ public class SMTPMessageHandler_maxSizeTest
         data.append("\r\nSubject: test\r\n\r\nTestmail");        
         
         final SMTPClient client = new SMTPClient();
-        client.connect("localhost", 1025);
+        client.connect("localhost", 1026);
         client.helo("localhost");
         client.setSender(sender);
         client.addRecipient("rcpt@localhost.com");

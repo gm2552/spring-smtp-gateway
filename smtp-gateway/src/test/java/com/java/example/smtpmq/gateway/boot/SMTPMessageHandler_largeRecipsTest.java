@@ -46,7 +46,7 @@ public class SMTPMessageHandler_largeRecipsTest
 	        	
 	        final String body = "Subject: test\r\n\r\nTestmail";
 	        final SMTPClient client = new SMTPClient();
-	        client.connect("localhost", 1025);
+	        client.connect("localhost", 1026);
 	        client.helo("localhost");
 	        client.setSender(sender);
 	        for (int i = 0; i < 550; ++i)
