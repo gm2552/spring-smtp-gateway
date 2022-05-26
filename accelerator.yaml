@@ -125,7 +125,7 @@ engine:
           with: "#serviceResourceType"           
     - type: RewritePath
       regex: 'templates/service.template'
-      rewriteTo: "'service.yaml'"                
+      rewriteTo: "'K8s/service.yaml'"                
   - condition:
       "#createRabbitMQCluster"
     include: ["**/rmqCluster.template"]
