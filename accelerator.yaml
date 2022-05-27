@@ -67,10 +67,8 @@ accelerator:
     required: true
 engine:
   merge:
-  - include: 
-      ["**/.java", "**/.yaml",  "**/.xml", "**/*.properties", "**/*.yml", "**/.jar"]
   - exclude: 
-      ["**/templates/**"]
+      ["**/templates/**", "**/icons/**", "**/.git/**"]
   - include: ["**/config/workload.yaml", "**/templates/workloads.template"]
     chain:
     - type: ReplaceText
