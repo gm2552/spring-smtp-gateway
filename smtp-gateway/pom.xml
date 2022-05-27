@@ -88,7 +88,21 @@
 		<dependency>
 			<groupId>org.nhind</groupId>
 			<artifactId>direct-common</artifactId>
-			<version>8.0.0</version>		
+			<version>8.0.0</version>
+            <exclusions>
+               <exclusion>
+                  <groupId>org.springframework.cloud</groupId> 
+                  <artifactId>spring-cloud-starter-openfeign</artifactId>
+               </exclusion>            
+               <exclusion>
+                  <groupId>org.apache.mina</groupId> 
+                  <artifactId>mina-core</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.jdom</groupId> 
+                  <artifactId>jdom</artifactId>
+               </exclusion>               
+            </exclusions>					
 		</dependency>		
 		<dependency>
 			<groupId>org.subethamail</groupId>

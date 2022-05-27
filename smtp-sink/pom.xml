@@ -41,6 +41,14 @@
                   <groupId>org.springframework.cloud</groupId> 
                   <artifactId>spring-cloud-starter-openfeign</artifactId>
                </exclusion>
+               <exclusion>
+                  <groupId>org.apache.mina</groupId> 
+                  <artifactId>mina-core</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.jdom</groupId> 
+                  <artifactId>jdom</artifactId>
+               </exclusion>                
             </exclusions>				
 		</dependency>	
 		<dependency>
