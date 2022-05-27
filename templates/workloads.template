@@ -23,7 +23,7 @@ spec:
   params:
   - name: ports
     value:
-    - port: 1026
+    - port: 25
       containerPort: 1026
       name: smtp
 ---

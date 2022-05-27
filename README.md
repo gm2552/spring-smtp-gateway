@@ -77,9 +77,7 @@ This repository includes an `accelerator.yaml` file that is used by the Tanzu Ap
 The accelerator contains the following configuration options:
 
 * **SMTP Gateway Container Port:**  The port that the smtp-gateway micro-service will be listening on for SMTP connections and SHOULD match the application's port configuration.  The default port is 1026 which is the same default port that the application listens on.
-* **Create Kubernetes Service Resource:**  If this box is checked, the accelerator will generate a file named `service.yaml` in the K8s directory that contains the resource definition for the service that will route traffic to the smtp-server micro-service.*
 * **SMTP Gateway Service Port:** The port that the Kubernetes service resource will be listening on.
-* **Service Resource Type:** The type of the Kubernetes service resource.  *NOTE:* If this is set to `LoadBalancer`, it is assumed your Kubernetes platform is appropriately configured to allocate an external IP address with a platform provided LoadBalancer implementation.
 * **RabbitMQ Cluster Name:**  The name of the RabbitMQ cluster resource that the micro-services will connect to.  If a new RabbitMQ cluster resource is to be created, this will be the name of the resource.  This name will also be propagated to the `workload.yaml` files in the resource claim section to indicate the names of the cluster that micro-services should connect to.
 * **RabbitMQ Service Name:** The namespace where the RabbitMQ is deployed or where it will be deployed.  It is assumed that this namespace has already been created.
 * **Workload Namespace:** The namespace where the application micro-services will be deployed.  It is assumed that this namespace has already been created.
@@ -115,11 +113,19 @@ kubectl apply -f workloads.yaml
 
 ## Testing the Deployment
 
-Assuming the application has successfully deployed, you can test the application by using the `telnet` application (or something else which can
-speak SMTP) as follows (you'll need to look up $LB_IP from the loadbalancer service):
+Assuming the application has successfully deployed, you can test the application by using the `telnet` (or something else which can
+speak SMTP) application and kubectl port forwarding.
+
+In one command shell, run the following command substituting the local port with a port of you choosing and the container port and workload namespace from your selections in the accelerator.
+
+```
+kubectl port-forward deploy/smtp-gateway <local_port>:<container_port> -n <workload_namespace>
+```
+
+Once port forwarding is in place, you can use the the telnet command below in another command shell (substituting the local port with the local port in the previous step).
 
 ```bash
-cat <<EOF | telnet $LB_IP 25
+cat <<EOF | telnet localhost <local_port>
 ehlo console
 mail from: ea@vmware.com
 rcpt to: gm@vmware.com
@@ -140,5 +146,5 @@ EOF
 You can then check that the smtp-sink application received the message with the following command:
 
 ```
-kubectl logs -l app.kubernetes.io/component=run,carto.run/workload-name=smtp-sink --tail 20
+kubectl logs -l app.kubernetes.io/component=run,carto.run/workload-name=smtp-sink --tail 20 -n <workload_namespace>
 ```

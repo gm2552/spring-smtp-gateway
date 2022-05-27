@@ -14,38 +14,13 @@ accelerator:
     inputType: text
     dataType: string
     required: true
-  - label: Create Kubernetes Service Resource Definition
-    description: If set to true, a Kubernetes Service resource definition yaml file will be created.
-    defaultValue: true
-    name: createServiceResource
-    inputType: checkbox
-    dataType: boolean
-    required: true
   - label: SMTP Gateway Service Port
-    description: The TCP port that will be used by Kubernetes service resource.
+    description: The TCP port that will be used by the Kubernetes service resource.
     defaultValue: "25"
     name: servicePort
     inputType: text
     dataType: string
     required: true
-    dependsOn:
-      name: createServiceResource
-  - label: Service Resource Type
-    description: Type of the Kubernetes service resource that will created.
-    defaultValue: clusterIP
-    name: serviceResourceType
-    inputType: select
-    choices:
-    - value: clusterIP
-      text: Cluster IP
-    - value: loadBalancer
-      text: Load Balancer
-    - value: nodePort
-      text: Node Port
-    dataType: string
-    required: true
-    dependsOn:
-      name: createServiceResource
   - label: RabbitMQ Cluster Name
     description: The name of the RabbitMQ cluster that the application services will connect to.
     defaultValue: rmq-1
@@ -106,26 +81,11 @@ engine:
           with: "#workloadNamespace"  
         - text: "1026"
           with: "#containerPort"     
+        - text: "25"
+          with: "#servicePort"    
     - type: RewritePath
       regex: 'templates/workloads.template'
-      rewriteTo: "'K8s/workloads.yaml'" 
-  - condition:
-      "#createServiceResource"
-    include: ["**/service.template"]
-    chain:
-    - type: ReplaceText
-      substitutions:
-        - text: "workload_namespace"
-          with: "#workloadNamespace"  
-        - text: "container_port"
-          with: "#containerPort"      
-        - text: "service_port"
-          with: "#servicePort"   
-        - text: "service_type"
-          with: "#serviceResourceType"           
-    - type: RewritePath
-      regex: 'templates/service.template'
-      rewriteTo: "'K8s/service.yaml'"                
+      rewriteTo: "'K8s/workloads.yaml'"                
   - condition:
       "#createRabbitMQCluster"
     include: ["**/rmqCluster.template"]
