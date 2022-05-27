@@ -15,7 +15,7 @@ spec:
       name: rmq-1
   source:
     git:
-      url: https://github.com/gm2552/spring-smtp-gateway
+      url: https://github.com/sample-accelerators/spring-smtp-gateway
       ref:
         branch: main
     subPath: smtp-sink

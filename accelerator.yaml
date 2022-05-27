@@ -1,7 +1,7 @@
 accelerator:
   displayName: Spring SMTP Gateway
   description: An lightweight SMTP server and a sample Spring Cloud Streams sink to demonstrate TAP tcp and queue workload types. 
-  iconUrl: https://github.com/gm2552/spring-smtp-gateway/raw/main/icons/email.png
+  iconUrl: https://github.com/sample-accelerators/spring-smtp-gateway/raw/main/icons/email.png
   tags:
   - java
   - spring
