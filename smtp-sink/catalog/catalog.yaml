@@ -15,6 +15,3 @@ spec:
  lifecycle: experimental
  owner: default-team
  system: spring-smtp-gateway
- dependsOn:
-  - resource:default/rmq-1
-  - component:default/smtp-gateway
