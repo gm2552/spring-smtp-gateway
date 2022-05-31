@@ -83,7 +83,7 @@ engine:
           with: "#servicePort"    
     - type: RewritePath
       regex: 'templates/workloads.template'
-      rewriteTo: "'K8s/workloads.yaml'"                
+      rewriteTo: "'config/developer/workloads.yaml'"                
   - condition:
       "#createRabbitMQCluster"
     include: ["**/rmqCluster.template"]
@@ -98,7 +98,7 @@ engine:
           with: "#numRabbitMQClusterNodes"            
     - type: RewritePath
       regex: 'templates/rmqCluster.template'
-      rewriteTo: "'K8s/rmqCluster.yaml'"
+      rewriteTo: "'config/service-operator/rmqCluster.yaml'"
   - condition:
       "#createResourceClaim"
     include: ["**/rmqResourceClaim.template"]
@@ -113,4 +113,4 @@ engine:
           with: "#workloadNamespace"       
     - type: RewritePath
       regex: 'templates/rmqResourceClaim.template'
-      rewriteTo: "'K8s/rmqResourceClaim.yaml'"
+      rewriteTo: "'config/app-operator/rmqResourceClaim.yaml'"
