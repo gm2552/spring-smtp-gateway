@@ -4,19 +4,20 @@ import java.util.List;
 
 import javax.mail.internet.InternetAddress;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nhindirect.common.mail.SMTPMailMessage;
 import org.nhindirect.common.mail.streams.SMTPMailMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-
 
 @Component
-@Slf4j
 public class SmtpGatewayMessageSource
 {	
+	private static Logger log = LogManager.getLogger(SmtpGatewayMessageSource.class);
+	
 	// Maps to the Spring Cloud Stream functional output binding name.
 	protected static final String OUT_BINDING_NAME = "smtp-gateway-message-out-0";
 	

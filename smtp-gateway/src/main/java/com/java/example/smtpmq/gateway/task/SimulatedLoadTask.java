@@ -8,6 +8,8 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nhindirect.common.mail.SMTPMailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,13 +19,12 @@ import org.springframework.stereotype.Component;
 
 import com.java.example.smtpmq.gateway.streams.SmtpGatewayMessageSource;
 
-import lombok.extern.slf4j.Slf4j;
-
 @ConditionalOnProperty(name="smtpmqgateway.loadgen.rate", matchIfMissing=false)
 @Component
-@Slf4j
 public class SimulatedLoadTask
 {
+	private static Logger log = LogManager.getLogger(SimulatedLoadTask.class);
+	
 	@Value("${smtpmqgateway.loadgen.sender}")
 	protected String sender;
 	

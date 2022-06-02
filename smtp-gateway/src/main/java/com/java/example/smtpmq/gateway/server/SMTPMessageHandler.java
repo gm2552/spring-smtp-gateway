@@ -15,6 +15,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nhindirect.common.mail.SMTPMailMessage;
 import org.springframework.util.StringUtils;
 import org.subethamail.smtp.MessageHandler;
@@ -23,11 +25,10 @@ import org.subethamail.smtp.TooMuchDataException;
 
 import com.java.example.smtpmq.gateway.streams.SmtpGatewayMessageSource;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class SMTPMessageHandler implements MessageHandler
 {
+	private static Logger log = LogManager.getLogger(MessageHandler.class);
+	
 	protected SmtpGatewayMessageSource messageSource;
 	protected GetMessageHeaderStream getMessageHeaderStream;
 	protected SizeLimitedStreamCreator sizeLimitedStreamCreator;
