@@ -1,11 +1,13 @@
 accelerator:
   displayName: Spring SMTP Gateway
-  description: An lightweight SMTP server and a sample Spring Cloud Streams sink to demonstrate TAP tcp and queue workload types. 
+  description: Demostration of a lightweight SMTP server and a sample Spring Cloud Streams sink to demonstrate TAP tcp and queue workload types (now server and worker as of TAP 1.3). 
   iconUrl: https://github.com/sample-accelerators/spring-smtp-gateway/raw/main/icons/email.png
   tags:
   - java
   - spring
-
+  - streaming
+  - educational
+  
   options:
   - label: SMTP Gateway Container Port
     description: The TCP port that will be exposed by the container.  This should match the configured listening port of the SMTP server application.

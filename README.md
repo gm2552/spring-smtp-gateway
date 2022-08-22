@@ -1,4 +1,16 @@
 # spring-smtp-gateway
+
+## Deployment Guide
+
+Below are detailed deployment instructions for various platforms.  Use these pages to quickly get the applications installed and running.
+
+* [Tanzu Application Platform](doc/TAPDeployment.md)
+* Tanzu Application Services (TBD)
+* Azure Spring Apps Enterprise (TBD)
+
+
+## Description
+
 The Spring SMTP Gateway is a set of applications that implement a lightweight SMTP server (`smtp-gateway`) which sends incoming RFC822 compliant messages over a Spring Cloud Stream destination to an arbitrary downstream processor application.  The processor application in this repo (`smtp-sink`) reads messages from the stream and dumps the full RFC822 message (including messages headers) to the standard out.
 
 ## Value Proposition
