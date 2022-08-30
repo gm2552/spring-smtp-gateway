@@ -22,3 +22,6 @@
 hs_err_pid*
 /.project
 /.DS_Store
+
+# maven-wrapper.jar
+**/maven-wrapper.jar
