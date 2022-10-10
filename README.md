@@ -1,5 +1,8 @@
 # spring-smtp-gateway
 
+> **NOTE** This repo has been archived and the sample has moved to:  
+> https://github.com/vmware-tanzu/application-accelerator-samples/tree/main/spring-smtp-gateway
+
 ## Deployment Guide
 
 Below are detailed deployment instructions for various platforms.  Use these pages to quickly get the applications installed and running.
